@@ -8,7 +8,7 @@ namespace DataAccess.Controllers
 {
     public class ReadFileExcelController: ControllerBase
     {
-        public static void ReadFileExcel(List<Accounting> traninfos, string DataLogID)
+        public static void ReadFileExcel(List<Accounting> traninfos, string DataLogID,string reportDate)
         {
             try
             {
@@ -39,6 +39,7 @@ namespace DataAccess.Controllers
                     values.Add(traninfo.PosEximNo);
                     values.Add(traninfo.PosVrbNo);
                     values.Add(DataLogID);
+                    values.Add(reportDate);
 
 
                     OracleHelper.ExecuteStoreProcedure(App.Configs.ConnectionString, Constants.PROC_ACCOUNTING_ADD, values.ToArray());

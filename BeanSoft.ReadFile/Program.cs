@@ -36,53 +36,57 @@ namespace BeanSoft.ReadFile
            //  Get All File in Directory
             var listFile = CommonUtils.GetListFile(App.Configs.DirectoryDataPath);
 
-            var options = new ParallelOptions()
-            {
-                MaxDegreeOfParallelism = 4
-            };
+            //var options = new ParallelOptions()
+            //{
+            //    MaxDegreeOfParallelism = 4
+            //};
             
             foreach(var listATM in listFile)
             {
-                if (listATM.Extension == Constants.EXTENSION_JRN)
+                if (listATM.FileName.Count > 0)
                 {
-                    Console.WriteLine("Start read ATM :" + listATM.DirName);
-                    var files = listATM.FileName;
-                    foreach(var file in files)
+                    if (listATM.Extension == Constants.EXTENSION_JRN)
                     {
-                        ExecuteJRN(file, listATM.DirName);
+                        Console.WriteLine("Start read ATM :" + listATM.DirName);
+                        var files = listATM.FileName;
+                        foreach (var file in files)
+                        {
+                            ExecuteJRN(file, listATM.DirName);
+                        }
+                        // Chua can dung parallel vi it file qua
+                        //Parallel.ForEach(files, options, file =>
+                        //{
+                        //    if (CheckBeforeIns(file,listATM.Extension))
+                        //    {
+                        //        Console.WriteLine("Start read file :" + file);
+                        //        ExecuteJRN(file,listATM.DirName);
+                        //        Console.WriteLine("End read file :" + file);
+                        //    }
+
+                        //});
                     }
-                    // Chua can dung parallel vi it file qua
-                    //Parallel.ForEach(files, options, file =>
-                    //{
-                    //    if (CheckBeforeIns(file,listATM.Extension))
-                    //    {
-                    //        Console.WriteLine("Start read file :" + file);
-                    //        ExecuteJRN(file,listATM.DirName);
-                    //        Console.WriteLine("End read file :" + file);
-                    //    }
-                        
-                    //});
-                } else if (listATM.Extension == Constants.EXTENSION_Excel)
-                {
-                    Console.WriteLine("Start read Excels :" + listATM.DirName);
-                    var files = listATM.FileName;
-                    foreach(var file in files)
+                    else if (listATM.Extension == Constants.EXTENSION_Excel)
                     {
-                        ExecuteReadFileExcel(file);
+                        Console.WriteLine("Start read Excels :" + listATM.DirName);
+                        var files = listATM.FileName;
+                        foreach (var file in files)
+                        {
+                            ExecuteReadFileExcel(file);
+                        }
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Start read ATM :" + listATM.DirName);
-                    var files = listATM.FileName;
-                    foreach (var file in files)
+                    else
                     {
-                        ExecuteReadFileJDATA(file,listATM.DirName);
+                        Console.WriteLine("Start read ATM :" + listATM.DirName);
+                        var files = listATM.FileName;
+                        foreach (var file in files)
+                        {
+                            ExecuteReadFileJDATA(file, listATM.DirName);
+                        }
                     }
                 }
             }
 
-            Console.WriteLine("End Read File Successful.");
+            Console.WriteLine("End Read File.");
             Console.WriteLine("Press any key to exit.");
             System.Console.ReadKey();
         }
@@ -101,17 +105,16 @@ namespace BeanSoft.ReadFile
                     {
                         ReadFileATMController.ReadFileJRN(listTransInfo, machineCode,DataLogID);
                         scope.Complete();
+                        Console.WriteLine("End read file Success:" + filename);
+                        BackUpFile(filename, machineCode, Constants.READFILE_SUCCESS);
                     }
                 }
-
-                Console.WriteLine("End read file :" + filename);
-                BackUpFile(filename, machineCode, Constants.READFILE_SUCCESS);
             }
             catch (TransactionAbortedException ex)
             {
                 BackUpFile(filename, machineCode, Constants.READFILE_FAIL);
                 ErrorUtils.WriteLog("ReadFileJDATA : TransactionAbortedException File: " + filename + " MsgErr:" + ex.Message);
-                throw ex;
+                //throw ex;
             }
             catch (Exception ex)
             {
@@ -139,20 +142,17 @@ namespace BeanSoft.ReadFile
                         {
                             ReadFileATMController.ReadFileEJDATA(listTransInfo, machineCode, DataLogID);
                             scope.Complete();
+                            Console.WriteLine("End read file Success:" + filename);
+                            BackUpFile(filename, machineCode, Constants.READFILE_SUCCESS);
                         }
                     }
                 }
-                    
-                
-                Console.WriteLine("End read file :" + filename);
-                BackUpFile(filename, machineCode, Constants.READFILE_SUCCESS);
-
             }
             catch (TransactionAbortedException ex)
             {
                 BackUpFile(filename, machineCode, Constants.READFILE_FAIL);
                 ErrorUtils.WriteLog("ReadFileJDATA : TransactionAbortedException File: " + filename + " MsgErr:" + ex.Message);
-                throw ex;
+                //throw ex;
             }
             catch (Exception ex)
             {
@@ -175,10 +175,11 @@ namespace BeanSoft.ReadFile
                     DataLogController.FinalReadFile(Path.GetFileNameWithoutExtension(filename).Substring(Path.GetFileNameWithoutExtension(filename).Length - 8, 8), Path.GetFileName(filename), out DataLogID);
                     if(!string.IsNullOrEmpty(DataLogID))
                     {
-                        ReadFileExcelController.ReadFileExcel(listTransInfo, DataLogID);
-                        BackUpFile(filename, "Excels", Constants.READFILE_SUCCESS);
+                        ReadFileExcelController.ReadFileExcel(listTransInfo, DataLogID, Path.GetFileNameWithoutExtension(filename).Substring(Path.GetFileNameWithoutExtension(filename).Length - 8, 8));
                         scope.Complete();
-                        Console.WriteLine("End read file :" + filename);
+
+                        BackUpFile(filename, "Excels", Constants.READFILE_SUCCESS);
+                        Console.WriteLine("End read file Success:" + filename);
                     }
                 }
             }
@@ -186,7 +187,7 @@ namespace BeanSoft.ReadFile
             {
                 BackUpFile(filename, "Excels", Constants.READFILE_FAIL);
                 ErrorUtils.WriteLog("ReadFileExcel : TransactionAbortedException File: " + filename + " MsgErr:" + ex.Message);
-                throw ex;
+                //throw ex;
             }
             catch (Exception ex)
             {
@@ -243,7 +244,7 @@ namespace BeanSoft.ReadFile
             }
             else
             {
-                targetPath = App.Configs.DirectoryDataPath.ToString() + @"Error\" + Dir;
+                targetPath = App.Configs.DirectoryDataPath.ToString() + @"Backup\Error\" + Dir;
 
             }
 
@@ -271,7 +272,7 @@ namespace BeanSoft.ReadFile
                     fileName = System.IO.Path.GetFileName(s);
                     destFile = System.IO.Path.Combine(targetPath, fileName);
                     System.IO.File.Copy(s, destFile, true);
-                    Console.WriteLine("Backup Sucessful file " + fileName);
+                    //Console.WriteLine("Backup Sucessful file " + fileName);
                     try
                     {
                         File.Delete(sourceFile);

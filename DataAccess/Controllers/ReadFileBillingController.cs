@@ -31,7 +31,7 @@ namespace DataAccess.Controllers
                     values.Add(billingInfo.ACC_TO);
                     values.Add(billingInfo.STATUS);
 
-                    OracleHelper.ExecuteStoreProcedure(App.Configs.ConnectionString, Constants.PROC_ATMINFOS_ADD, values.ToArray());
+                    OracleHelper.ExecuteStoreProcedure(App.Configs.ConnectionString, Constants.PROC_BILLINGINFO_ADD, values.ToArray());
                 }
             }
             catch (Exception ex)
