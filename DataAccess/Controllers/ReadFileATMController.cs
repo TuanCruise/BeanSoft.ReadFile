@@ -54,6 +54,7 @@ namespace DataAccess.Controllers
                     values.Add(traninfo.AMOUNT);
                     values.Add(traninfo.TRANSACTION_END);
                     values.Add(traninfo.TRANSACTION_DATE);
+                    values.Add(traninfo.CASH_RETRACTED);
                     values.Add(machineCode);
                     values.Add(DataLogID);
 

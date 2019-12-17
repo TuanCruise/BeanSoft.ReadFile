@@ -23,7 +23,7 @@ namespace Models.Entities
         public string CASH_REQUEST { get; set; }
         public string CASH_PRESENTED { get; set; }
         public string CASH_TAKEN { get; set; }
-
+        public string CASH_RETRACTED { get; set; }
         public string TRANSACTION_DATE { get; set; }
     }
 }

@@ -46,6 +46,14 @@ namespace Models.Controllers
                         listTransInfo.Add(transInfo);
                         bCheck = false;
                     }
+                    if (line.Contains(Constants.CASH_RETRACTED))
+                    {
+                        transInfo.CASH_RETRACTED = Constants.YES;
+                    }
+                    else
+                    {
+                        transInfo.CASH_RETRACTED = Constants.NO;
+                    }
                     transInfo.TRANSACTION_DATE = fileNameresult;
                 }
 

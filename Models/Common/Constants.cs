@@ -24,6 +24,7 @@ namespace Models.Common
         public static string CASH = "CASH";
         public static string CASH_REQUEST = "CASH REQUEST:";
         public static string CASH_PRESENTED = "CASH PRESENTED";
+        public static string CASH_RETRACTED = "CASH RETRACTED";
         public static string CASH_TAKEN = "CASH TAKEN";
         public static string TRACK_2_DATA = "TRACK 2 DATA:";
 
