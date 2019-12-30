@@ -59,28 +59,47 @@ namespace Models.Common
         public const string EXTENSION_JRN = "JRN";
         public const string EXTENSION_LOG = "LOG";
         public const string EXTENSION_Excel = "XLSX";
+        public const string EXTENSION_DAT = "DAT";
+
+        public const string FOLDER_BILLING = "BILLING";
+        public const string FOLDER_ECOM = "ECOM";
 
         public const string READFILE_SUCCESS = "S";
         public const string READFILE_FAIL = "F";
 
+        public const string FILE_INC = "INC";
+        public const string FILE_REF = "REF";
+        public const string FILE_ACK = "ACK";
+        public const string FILE_OUT = "OUT";
+
         public const int POS_BASE = 0;
         public const int POS_1 = POS_BASE + 4;
-        public const int POS_2 = POS_BASE + 25;
-        public const int POS_3 = POS_BASE + 33;
-        public const int POS_4 = POS_BASE + 45;
-        public const int POS_5 = POS_BASE + 51;
-        public const int POS_6 = POS_BASE + 57;
-        public const int POS_7 = POS_BASE + 61;
-        public const int POS_8 = POS_BASE + 65;
-        public const int POS_9 = POS_BASE + 69;
-        public const int POS_10 = POS_BASE + 75;
-        public const int POS_11 = POS_BASE + 83;
-        public const int POS_12 = POS_BASE + 86;
-        public const int POS_13 = POS_BASE + 106;
-        public const int POS_14 = POS_BASE + 126;
-        public const int POS_15 = POS_BASE + 130;
+        public const int POS_2 = POS_1 + 19;
+        public const int POS_3 = POS_2 + 6;
+        public const int POS_4 = POS_3 + 12;
+        public const int POS_5 = POS_4 + 6;
+        public const int POS_6 = POS_5 + 6;
+        public const int POS_7 = POS_6 + 4;
+        public const int POS_8 = POS_7 + 4;
+        public const int POS_9 = POS_8 + 4;
+        public const int POS_10 = POS_9 + 8;
+        public const int POS_11 = POS_10 + 6;
+        public const int POS_12 = POS_11 + 8;
+        public const int POS_13 = POS_12 + 3;
+        public const int POS_14 = POS_13 + 20;
+        public const int POS_15 = POS_14 + 20;
+        public const int POS_16 = POS_15 + 4;
+        public const int POS_17 = POS_16 + 4;
+        public const int POS_18 = POS_17 + 32;
+
 
 
         public const int StartRow = 6;
+        public const string FileData_JRN = "14";
+        public const string FileData_LOG = "16";
+        public const string FileData_HT = "28";
+        public const string FileTopupBilling = "29";
+        public const string FileEcom = "33";
+
     }
 }

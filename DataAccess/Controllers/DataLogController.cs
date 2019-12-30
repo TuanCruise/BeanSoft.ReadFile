@@ -9,12 +9,13 @@ namespace DataAccess.Controllers
 {
     public class DataLogController
     {
-        public static void FinalReadFile(string reportDate, string fileName,out string logID )
+        public static void FinalReadFile(string FileID,string reportDate, string fileName,out string logID )
         {
             try
             {
                 logID = string.Empty;
                 var values = new List<string>();
+                values.Add(FileID);
                 values.Add(reportDate);
                 values.Add(fileName);
 

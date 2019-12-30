@@ -25,20 +25,38 @@ namespace Models.Controllers
                     transInfo = new TransInfo();
                     transInfo.TRANSACTION_START = CommonUtils.ProcessString(line).Substring(0, CommonUtils.ProcessString(line).Length - 3);
                     transInfo.TRANSACTION_DATE = fileNameresult;
+                    transInfo.CASH_RETRACTED = "N";
                     bCheck = true;
                 }
                 if (bCheck)
                 {
-                    if (line.Contains(Constants.TRACK_2_DATA)) transInfo.CARD_NUMBER = CommonUtils.ProcessString(line).Substring(CommonUtils.ProcessString(line).Length - 16, 16);
+
+                    if (line.Contains(Constants.TRACK_2_DATA) == true)
+                    {
+                        transInfo.CARD_NUMBER = CommonUtils.ProcessString(line).Substring(CommonUtils.ProcessString(line).Length - 16, 16);
+                    }
+                    
                     //if (line.Contains(Constants.CARD_TAKEN)) transInfo.CARD_TAKEN = CommonUtils.ProcessString(line);
-                    if (line.Contains(Constants.CASH_REQUEST)) transInfo.CASH_REQUEST = CommonUtils.ProcessString(line);
+                    if (line.Contains(Constants.CASH_REQUEST) == true)
+                    {
+                        transInfo.CASH_REQUEST = CommonUtils.ProcessString(line);
+                    }
                     if (line.Contains(Constants.CASH) && !line.Contains(Constants.CASH_PRESENTED) && !line.Contains(Constants.CASH_TAKEN) && !line.Contains(Constants.CASH_REQUEST))
                     {
                         transInfo.CASH = CommonUtils.ProcessString(line).Substring(8, CommonUtils.ProcessString(line).Length - 8).Trim();
                     };
-                    if (line.Contains(Constants.CASH_PRESENTED)) transInfo.CASH_PRESENTED = CommonUtils.ProcessString(line);
-                    if (line.Contains(Constants.CASH_TAKEN)) transInfo.CASH_TAKEN = CommonUtils.ProcessString(line);
-                    if (line.Contains(Constants.AMOUNT)) transInfo.AMOUNT = CommonUtils.ProcessString(line);
+                    if (line.Contains(Constants.CASH_PRESENTED))
+                    { 
+                        transInfo.CASH_PRESENTED = CommonUtils.ProcessString(line); 
+                    }
+                    if (line.Contains(Constants.CASH_TAKEN)) 
+                    { 
+                            transInfo.CASH_TAKEN = CommonUtils.ProcessString(line); 
+                    }
+                    if (line.Contains(Constants.AMOUNT)) 
+                    { 
+                        transInfo.AMOUNT = CommonUtils.ProcessString(line); 
+                    }
 
                     if (line.Contains(Constants.TRANSACTION_STOP_JRN))
                     {
@@ -50,10 +68,7 @@ namespace Models.Controllers
                     {
                         transInfo.CASH_RETRACTED = Constants.YES;
                     }
-                    else
-                    {
-                        transInfo.CASH_RETRACTED = Constants.NO;
-                    }
+                    
                     transInfo.TRANSACTION_DATE = fileNameresult;
                 }
 

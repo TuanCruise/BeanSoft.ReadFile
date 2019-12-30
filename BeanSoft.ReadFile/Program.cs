@@ -65,6 +65,15 @@ namespace BeanSoft.ReadFile
 
                         //});
                     }
+                    else if(listATM.Extension == Constants.EXTENSION_LOG)
+                    {
+                        Console.WriteLine("Start read ATM :" + listATM.DirName);
+                        var files = listATM.FileName;
+                        foreach (var file in files)
+                        {
+                            ExecuteReadFileJDATA(file, listATM.DirName);
+                        }
+                    }
                     else if (listATM.Extension == Constants.EXTENSION_Excel)
                     {
                         Console.WriteLine("Start read Excels :" + listATM.DirName);
@@ -74,15 +83,28 @@ namespace BeanSoft.ReadFile
                             ExecuteReadFileExcel(file);
                         }
                     }
-                    else
+                    else if (listATM.Extension == Constants.EXTENSION_DAT)
                     {
-                        Console.WriteLine("Start read ATM :" + listATM.DirName);
-                        var files = listATM.FileName;
-                        foreach (var file in files)
+                        if (listATM.DirName.ToUpper() == Constants.FOLDER_BILLING)
                         {
-                            ExecuteReadFileJDATA(file, listATM.DirName);
+                            Console.WriteLine("Start read Billing :" + listATM.DirName);
+                            var files = listATM.FileName;
+                            foreach (var file in files)
+                            {
+                                ExecuteReadFileBilling(file);
+                            }
+                        } else if (listATM.DirName.ToUpper() == Constants.FOLDER_ECOM)
+                        {
+                            Console.WriteLine("Start read Ecom :" + listATM.DirName);
+                            var files = listATM.FileName;
+                            foreach (var file in files)
+                            {
+                                ExecuteReadFileEcom(file);
+                            }
                         }
+                        
                     }
+
                 }
             }
 
@@ -90,6 +112,36 @@ namespace BeanSoft.ReadFile
             Console.WriteLine("Press any key to exit.");
             System.Console.ReadKey();
         }
+
+        private static void ExecuteReadFileEcom(string filename)
+        {
+            try
+            {
+                Console.WriteLine("Start read file :" + filename);
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    var listEcomInfo = ReadFileEcom.ReadFile(filename);
+                    string DataLogID = string.Empty;
+                    // Ten file phai dinh dang DDMMYYYY
+                    DataLogController.FinalReadFile(Constants.FileTopupBilling, Path.GetFileNameWithoutExtension(filename).Substring(Path.GetFileNameWithoutExtension(filename).Length - 8, 8), Path.GetFileName(filename), out DataLogID);
+                    if (!string.IsNullOrEmpty(DataLogID))
+                    {
+                        ReadFileEcomController.ReadFileEcom(listEcomInfo, DataLogID, Path.GetFileNameWithoutExtension(filename).Substring(Path.GetFileNameWithoutExtension(filename).Length - 8, 8));
+                        scope.Complete();
+
+                        BackUpFile(filename, "Ecom", Constants.READFILE_SUCCESS);
+                        Console.WriteLine("End read file Success:" + filename);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(filename + "-" + ex.Message);
+                ErrorUtils.WriteLog(filename + "-" + ex.Message);
+            }
+        }
+
         private static void ExecuteJRN (string filename,string machineCode)
         {
             try
@@ -100,7 +152,7 @@ namespace BeanSoft.ReadFile
                     string DataLogID = string.Empty;
                     var listTransInfo = ReadFileATM.ReadFileJRN(filename);
 
-                    DataLogController.FinalReadFile(Path.GetFileNameWithoutExtension(filename).Substring(Path.GetFileNameWithoutExtension(filename).Length - 8, 8), Path.GetFileName(filename), out DataLogID);
+                    DataLogController.FinalReadFile(Constants.FileData_JRN,Path.GetFileNameWithoutExtension(filename).Substring(Path.GetFileNameWithoutExtension(filename).Length - 8, 8), machineCode + Path.GetFileName(filename), out DataLogID);
                     if (!string.IsNullOrEmpty(DataLogID))
                     {
                         ReadFileATMController.ReadFileJRN(listTransInfo, machineCode,DataLogID);
@@ -137,7 +189,7 @@ namespace BeanSoft.ReadFile
 
                         string trandate = listTransInfo[0].CARD_INSERTED.Substring(0, 8);
                         string DataLogID = string.Empty;
-                        DataLogController.FinalReadFile(DateTime.Parse(trandate).ToString("ddMMyyyy"), Path.GetFileName(filename), out DataLogID);
+                        DataLogController.FinalReadFile(Constants.FileData_LOG,DateTime.Parse(trandate).ToString("ddMMyyyy"), machineCode + Path.GetFileName(filename), out DataLogID);
                         if (!string.IsNullOrEmpty(DataLogID))
                         {
                             ReadFileATMController.ReadFileEJDATA(listTransInfo, machineCode, DataLogID);
@@ -147,6 +199,11 @@ namespace BeanSoft.ReadFile
                         }
                     }
                 }
+                else
+                {
+                    BackUpFile(filename, machineCode, Constants.READFILE_FAIL);
+                }
+
             }
             catch (TransactionAbortedException ex)
             {
@@ -172,7 +229,7 @@ namespace BeanSoft.ReadFile
                     var listTransInfo = ReadFileExcel.ReadExcel (filename);
                     string DataLogID = string.Empty;
                     // Ten file phai dinh dang DDMMYYYY
-                    DataLogController.FinalReadFile(Path.GetFileNameWithoutExtension(filename).Substring(Path.GetFileNameWithoutExtension(filename).Length - 8, 8), Path.GetFileName(filename), out DataLogID);
+                    DataLogController.FinalReadFile(Constants.FileData_HT, Path.GetFileNameWithoutExtension(filename).Substring(Path.GetFileNameWithoutExtension(filename).Length - 8, 8), Path.GetFileName(filename), out DataLogID);
                     if(!string.IsNullOrEmpty(DataLogID))
                     {
                         ReadFileExcelController.ReadFileExcel(listTransInfo, DataLogID, Path.GetFileNameWithoutExtension(filename).Substring(Path.GetFileNameWithoutExtension(filename).Length - 8, 8));
@@ -201,8 +258,23 @@ namespace BeanSoft.ReadFile
         {
             try
             {
-                var listBillingInfo = ReadFileBilling.ReadFile(filename);
-                ReadFileBillingController.ReadFileBilling(listBillingInfo);
+                Console.WriteLine("Start read file :" + filename);
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    var listBillingInfo = ReadFileBilling.ReadFile(filename);
+                    string DataLogID = string.Empty;
+                    // Ten file phai dinh dang DDMMYYYY
+                    DataLogController.FinalReadFile(Constants.FileTopupBilling, Path.GetFileNameWithoutExtension(filename).Substring(Path.GetFileNameWithoutExtension(filename).Length - 8, 8), Path.GetFileName(filename), out DataLogID);
+                    if (!string.IsNullOrEmpty(DataLogID))
+                    {
+                        ReadFileBillingController.ReadFileBilling (listBillingInfo, DataLogID, Path.GetFileNameWithoutExtension(filename).Substring(Path.GetFileNameWithoutExtension(filename).Length - 8, 8));
+                        scope.Complete();
+
+                        BackUpFile(filename, "Billing", Constants.READFILE_SUCCESS);
+                        Console.WriteLine("End read file Success:" + filename);
+                    }
+                }
+
             }
             catch (Exception ex)
             {
