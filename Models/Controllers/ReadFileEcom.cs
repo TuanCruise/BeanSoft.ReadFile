@@ -3,8 +3,6 @@ using Models.Common;
 using Models.Entities;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Models.Controllers
 {
@@ -41,8 +39,8 @@ namespace Models.Controllers
                         ecomInfo.PAYMENT_DATE = line.Substring(Constants.POS_7, 4);
                         ecomInfo.DEVICE_TYPE = line.Substring(Constants.POS_8, 4);
                         ecomInfo.BANK_CODE = line.Substring(Constants.POS_9, 8);
-                        ecomInfo.AUTH_NUMBER = line.Substring(Constants.POS_10,6);
-                        ecomInfo.DEVICE_CODE = line.Substring(Constants.POS_11, 6);
+                        ecomInfo.AUTH_NUMBER = line.Substring(Constants.POS_10, 6);
+                        ecomInfo.DEVICE_CODE = line.Substring(Constants.POS_11, 8);
                         ecomInfo.CCY = line.Substring(Constants.POS_12, 3);
                         ecomInfo.TRANSACTION_CODE = line.Substring(Constants.POS_13, 20);
                         ecomInfo.AUTHORISATION_CODE = line.Substring(Constants.POS_14, 20);
@@ -51,21 +49,22 @@ namespace Models.Controllers
                         ecomInfo.CHECKSUM = line.Substring(Constants.POS_17, 32);
 
                         listecomInfo.Add(ecomInfo);
-                    } else
+                    }
+                    else
                     {
                         // Read Footer
                         ReadFileFooter(line);
                     }
 
-                    
+
                 }
                 return listecomInfo;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
-            
+
         }
 
         public static EcomInfoHeader ReadFileHeader(string line)
@@ -75,10 +74,10 @@ namespace Models.Controllers
                 EcomInfoHeader ecomInfoHeader = new EcomInfoHeader();
                 //if (line.Length == 18)
                 //{
-                    // Read Header
-                    ecomInfoHeader.HeaderTypeRecord = line.Substring(Constants.POS_BASE, 4);
-                    ecomInfoHeader.BIN = line.Substring(4, 8);
-                    ecomInfoHeader.TxDate = line.Substring(12, 6);
+                // Read Header
+                ecomInfoHeader.HeaderTypeRecord = line.Substring(Constants.POS_BASE, 4);
+                ecomInfoHeader.BIN = line.Substring(4, 8);
+                ecomInfoHeader.TxDate = line.Substring(12, 6);
                 //}
 
                 return ecomInfoHeader;
@@ -96,14 +95,14 @@ namespace Models.Controllers
                 EcomInfoFooter ecomInfoFooter = new EcomInfoFooter();
                 //if (line.Length == 80)
                 //{ 
-                    // Read Footer
-                    ecomInfoFooter.FooterTypeRecord = line.Substring(Constants.POS_BASE, 4);
-                    ecomInfoFooter.NoRecord = line.Substring(5, 9);
-                    ecomInfoFooter.CreatedBy = line.Substring(14, 20);
-                    ecomInfoFooter.TimeCreated = line.Substring(34, 6);
-                    ecomInfoFooter.DateCreated = line.Substring(40, 8);
-                    ecomInfoFooter.CheckFileValue = line.Substring(48, 32);
-               // }
+                // Read Footer
+                ecomInfoFooter.FooterTypeRecord = line.Substring(Constants.POS_BASE, 4);
+                ecomInfoFooter.NoRecord = line.Substring(5, 9);
+                ecomInfoFooter.CreatedBy = line.Substring(14, 20);
+                ecomInfoFooter.TimeCreated = line.Substring(34, 6);
+                ecomInfoFooter.DateCreated = line.Substring(40, 8);
+                ecomInfoFooter.CheckFileValue = line.Substring(48, 32);
+                // }
 
                 return ecomInfoFooter;
             }

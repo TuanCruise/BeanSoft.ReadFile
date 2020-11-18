@@ -3,8 +3,6 @@ using Models.Common;
 using Models.Entities;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Models.Controllers
 {
@@ -41,8 +39,8 @@ namespace Models.Controllers
                         billingInfo.PAYMENT_DATE = line.Substring(Constants.POS_7, 4);
                         billingInfo.DEVICE_TYPE = line.Substring(Constants.POS_8, 4);
                         billingInfo.BANK_CODE = line.Substring(Constants.POS_9, 8);
-                        billingInfo.AUTH_NUMBER = line.Substring(Constants.POS_10,6);
-                        billingInfo.DEVICE_CODE = line.Substring(Constants.POS_11, 6);
+                        billingInfo.AUTH_NUMBER = line.Substring(Constants.POS_10, 6);
+                        billingInfo.DEVICE_CODE = line.Substring(Constants.POS_11, 8);
                         billingInfo.CCY = line.Substring(Constants.POS_12, 3);
                         billingInfo.FROM_ACC = line.Substring(Constants.POS_13, 20);
                         billingInfo.TO_ACC = line.Substring(Constants.POS_14, 20);
@@ -51,21 +49,22 @@ namespace Models.Controllers
                         billingInfo.CHECKSUM = line.Substring(Constants.POS_17, 32);
 
                         listBillingInfo.Add(billingInfo);
-                    } else
+                    }
+                    else
                     {
                         // Read Footer
                         ReadFileFooter(line);
                     }
 
-                    
+
                 }
                 return listBillingInfo;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
-            
+
         }
 
         public static BillingInfoHeader ReadFileHeader(string line)
@@ -75,10 +74,10 @@ namespace Models.Controllers
                 BillingInfoHeader billingInfoHeader = new BillingInfoHeader();
                 //if (line.Length == 18)
                 //{
-                    // Read Header
-                    billingInfoHeader.HeaderTypeRecord = line.Substring(Constants.POS_BASE, 4);
-                    billingInfoHeader.BIN = line.Substring(4, 8);
-                    billingInfoHeader.TxDate = line.Substring(12, 6);
+                // Read Header
+                billingInfoHeader.HeaderTypeRecord = line.Substring(Constants.POS_BASE, 4);
+                billingInfoHeader.BIN = line.Substring(4, 8);
+                billingInfoHeader.TxDate = line.Substring(12, 6);
                 //}
 
                 return billingInfoHeader;
@@ -96,14 +95,14 @@ namespace Models.Controllers
                 BillingInfoFooter billingInfoFooter = new BillingInfoFooter();
                 //if (line.Length == 80)
                 //{ 
-                    // Read Footer
-                    billingInfoFooter.FooterTypeRecord = line.Substring(Constants.POS_BASE, 4);
-                    billingInfoFooter.NoRecord = line.Substring(5, 9);
-                    billingInfoFooter.CreatedBy = line.Substring(14, 20);
-                    billingInfoFooter.TimeCreated = line.Substring(34, 6);
-                    billingInfoFooter.DateCreated = line.Substring(40, 8);
-                    billingInfoFooter.CheckFileValue = line.Substring(48, 32);
-               // }
+                // Read Footer
+                billingInfoFooter.FooterTypeRecord = line.Substring(Constants.POS_BASE, 4);
+                billingInfoFooter.NoRecord = line.Substring(5, 9);
+                billingInfoFooter.CreatedBy = line.Substring(14, 20);
+                billingInfoFooter.TimeCreated = line.Substring(34, 6);
+                billingInfoFooter.DateCreated = line.Substring(40, 8);
+                billingInfoFooter.CheckFileValue = line.Substring(48, 32);
+                // }
 
                 return billingInfoFooter;
             }
