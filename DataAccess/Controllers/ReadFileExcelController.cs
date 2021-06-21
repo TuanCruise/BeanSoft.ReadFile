@@ -51,5 +51,34 @@ namespace DataAccess.Controllers
             }
         }
 
+
+        public static void ReadFileExcelVisa(List<VisaDebitFee> visaDebitFees, string DataLogID, string reportDate)
+        {
+            try
+            {
+                foreach (var visaDebit in visaDebitFees)
+                {
+                    var values = new List<string>();
+                    values.Add(visaDebit.BranchID);
+                    values.Add(visaDebit.CardNameOrg);
+                    values.Add(visaDebit.CardNo);
+                    values.Add(visaDebit.Acctno);
+                    values.Add(visaDebit.ValidDate);
+                    values.Add(visaDebit.ExpiredDate);
+                    values.Add(visaDebit.CardType);
+                    values.Add(visaDebit.Type);
+                    values.Add(visaDebit.FeeAmount);
+                    values.Add(DataLogID);
+                    values.Add(reportDate);
+
+                    OracleHelper.ExecuteStoreProcedure(App.Configs.ConnectionString, Constants.PROC_VISA_DEBIT_FEE, values.ToArray());
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

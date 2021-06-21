@@ -5,7 +5,6 @@ using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 namespace Models.Controllers
 {
     public class ReadFileExcel: ControllerBase
@@ -78,6 +77,62 @@ namespace Models.Controllers
                 return null;
             }
           
+        }
+
+        public static List<VisaDebitFee> ReadExcelVisaDebit(string fileName)
+        {
+            try
+            {
+                List<VisaDebitFee> lstvisaDebitFees = new List<VisaDebitFee>();
+                Boolean bCheck = true;
+                FileInfo existingFile = new FileInfo(fileName);
+                using (ExcelPackage package = new ExcelPackage(existingFile))
+                {
+                    //get the first worksheet in the workbook
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[4];
+                    int colCount = worksheet.Dimension.End.Column;  //get Column Count
+                    int rowCount = worksheet.Dimension.End.Row;     //get row count
+
+                    for (int row = Constants.StartRow - 1; row <= rowCount; row++)
+                    {
+                        bCheck = true;
+                        try
+                        {
+                            if (string.IsNullOrEmpty(worksheet.Cells[row, 4].Value.ToString()))
+                            {
+                                bCheck = false;
+                            };
+                        }
+                        catch 
+                        {
+                            bCheck = false;
+                        }
+                        if (bCheck)
+                        {
+                            var objvisaDebitFee = new VisaDebitFee();
+                            objvisaDebitFee.BranchID = worksheet.Cells[row, 2].Value?.ToString().Trim();
+                            objvisaDebitFee.CardNameOrg = worksheet.Cells[row, 3].Value?.ToString().Trim();
+                            objvisaDebitFee.CardNo = worksheet.Cells[row, 4].Value?.ToString().Trim();
+                            objvisaDebitFee.Acctno = worksheet.Cells[row, 5].Value?.ToString().Trim();
+                            objvisaDebitFee.ValidDate = DateTime.FromOADate(double.Parse(worksheet.Cells[row, 6].Value.ToString())).ToShortDateString(); // worksheet.Cells[row, 6].Value?.ToString().Trim();
+                            objvisaDebitFee.ExpiredDate = DateTime.FromOADate(double.Parse(worksheet.Cells[row, 7].Value.ToString())).ToShortDateString(); // worksheet.Cells[row, 7].Value?.ToString().Trim();
+                            objvisaDebitFee.CardType = worksheet.Cells[row, 8].Value?.ToString().Trim();
+                            objvisaDebitFee.Type = worksheet.Cells[row, 9].Value?.ToString().Trim();
+                            objvisaDebitFee.FeeAmount = Math.Round(Double.Parse(worksheet.Cells[row, 10].Value?.ToString().Trim())).ToString();
+
+                            lstvisaDebitFees.Add(objvisaDebitFee);
+                        }
+                    }
+                }
+
+                return lstvisaDebitFees;
+            }
+            catch (Exception ex)
+            {
+                ErrorUtils.WriteLog(ex.Message);
+                return null;
+            }
+
         }
     }
 }
