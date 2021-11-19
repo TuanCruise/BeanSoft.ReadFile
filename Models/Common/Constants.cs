@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Models.Common
+﻿namespace Models.Common
 {
     public class Constants
     {
@@ -47,10 +45,14 @@ namespace Models.Common
         public const string PROC_ATMINFOSJRN_ADD = "SP_ATMINFOSJRN_ADD";
         public const string PROC_ACCOUNTING_ADD = "SP_ACCOUNTING_TRANS_INS";
         public const string PROC_BILLINGINFO_ADD = "SP_BILLINGINFO_ADD";
+        public const string PROC_ECOMINFO_ADD = "SP_ECOMINFO_ADD";
+
         public const string PROC_GET_ACCOUNTING = "SP_ACCOUNTING_TRANS_INS";
         public const string PROC_GET_ATMPOS = "SP_ACCOUNTING_TRANS_INS";
         public const string PROC_GET_ATMPOSJRN = "SP_ACCOUNTING_TRANS_INS";
         public const string PROC_LOG_ADD = "SP_SYS_DATAFILE_LOG_ADD";
+
+        public const string PROC_GET_DATA_SRS = "SP_GET_DATA_SRS";
 
 
         public const string YES = "Y";

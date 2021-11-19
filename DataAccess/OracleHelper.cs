@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Models.Common;
+using Oracle.ManagedDataAccess.Client;
+using Oracle.ManagedDataAccess.Types;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using Models.Common;
-using Oracle.ManagedDataAccess.Client;
-using Oracle.ManagedDataAccess.Types;
 
 namespace DataAccess
 {
@@ -51,8 +51,8 @@ namespace DataAccess
                             switch (param.OracleDbType)
                             {
                                 case OracleDbType.Date:
-                                    //param.Value = Convert.ToDateTime(values[index], Culture);
-                                    //break;
+                                //param.Value = Convert.ToDateTime(values[index], Culture);
+                                //break;
                                 case OracleDbType.Byte:
                                 case OracleDbType.Int16:
                                 case OracleDbType.Int32:
@@ -60,8 +60,8 @@ namespace DataAccess
                                 case OracleDbType.Single:
                                 case OracleDbType.Double:
                                 case OracleDbType.Decimal:
-                                    //param.Value = Convert.ToDecimal(values[index], App.Environment.ServerInfo.Culture);
-                                    //break;
+                                //param.Value = Convert.ToDecimal(values[index], App.Environment.ServerInfo.Culture);
+                                //break;
                                 default:
                                     param.Value = values[index];
                                     break;
@@ -122,7 +122,7 @@ namespace DataAccess
                 {
                     throw ThrowOracleUserException(ex, commandText);
                 }
-                
+
                 catch (Exception ex)
                 {
                     throw ex;
@@ -178,7 +178,7 @@ namespace DataAccess
                     {
                         throw ThrowOracleUserException(ex, commandText);
                     }
-                   
+
                     catch (Exception ex)
                     {
                         throw ex;
@@ -256,7 +256,7 @@ namespace DataAccess
                 try
                 {
                     var comm = new OracleCommand(commandText, conn) { CommandType = CommandType.StoredProcedure };
-                    AssignParameters(comm,  values);
+                    AssignParameters(comm, values);
                     comm.ExecuteNonQuery();
                     if (
                         comm.Parameters.Contains(Constants.ORACLE_EXCEPTION_PARAMETER_NAME) &&
@@ -271,7 +271,7 @@ namespace DataAccess
                 {
                     throw ThrowOracleUserException(ex, commandText);
                 }
-             
+
                 catch (Exception ex)
                 {
 
@@ -284,7 +284,7 @@ namespace DataAccess
             }
         }
 
-       
+
         public static void FillDataTable(string connectionString, string commandText, out DataTable resultTable, params object[] values)
         {
             using (var conn = new OracleConnection(connectionString))
@@ -325,7 +325,7 @@ namespace DataAccess
                 {
                     throw ThrowOracleUserException(ex, commandText);
                 }
-               
+
                 catch (Exception ex)
                 {
                     throw ex;
@@ -339,7 +339,7 @@ namespace DataAccess
             }
         }
 
-      
+
 
         public static Exception ThrowOracleUserException(OracleException ex, string commandText)
         {
@@ -366,7 +366,7 @@ namespace DataAccess
         }
 
 
-        public static void FillDataSetWithoutPram(string connectionString,  string commandText, out DataSet ds)
+        public static void FillDataSetWithoutPram(string connectionString, string commandText, out DataSet ds)
         {
             using (var conn = new OracleConnection(connectionString))
             {
@@ -397,7 +397,7 @@ namespace DataAccess
                             )
                         {
                             var errCode = int.Parse(comm.Parameters[Constants.ORACLE_EXCEPTION_PARAMETER_NAME].Value.ToString());
-                           // if (errCode != 0) throw ErrorUtils.WriteLog(errCode + commandText);
+                            // if (errCode != 0) throw ErrorUtils.WriteLog(errCode + commandText);
                         }
                     }
                 }
@@ -405,7 +405,7 @@ namespace DataAccess
                 {
                     throw ThrowOracleUserException(ex, commandText);
                 }
-                
+
                 catch (Exception ex)
                 {
                     throw ex;

@@ -2,36 +2,39 @@
 using Models.Entities;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DataAccess.Controllers
 {
     public class ReadFileEcomController
     {
-        public static void ReadFileEcom(List<EcomInfo> ecomInfos, string DataLogID, string reportDate)
+        public static void ReadFileEcom(List<EcomInfo> ecomInfos, string DataLogID, string reportDate, string filename)
         {
             try
             {
                 foreach (var ecomInfo in ecomInfos)
                 {
                     var values = new List<string>();
-                    //values.Add(billingInfo.MTI);
-                    //values.Add(billingInfo.PAN_ACC);
-                    //values.Add(billingInfo.PROCESS_CODE);
-                    //values.Add(billingInfo.AMOUNT);
-                    //values.Add(billingInfo.TRACE_NUMBER);
-                    //values.Add(billingInfo.TRANS_TIME);
-                    //values.Add(billingInfo.TRANS_DATE);
-                    //values.Add(billingInfo.PAYMENT_DATE);
-                    //values.Add(billingInfo.DEVICE_TYPE);
-                    //values.Add(billingInfo.BANK_CODE);
-                    //values.Add(billingInfo.DEVICE_CODE);
-                    //values.Add(billingInfo.CCY);
-                    //values.Add(billingInfo.ACC_FROM);
-                    //values.Add(billingInfo.ACC_TO);
-                    //values.Add(billingInfo.STATUS);
+                    values.Add(ecomInfo.DETAILRECORD);
+                    values.Add(ecomInfo.PANNO);
+                    values.Add(ecomInfo.PROCESSING_CODE.Trim());
+                    values.Add(ecomInfo.AMOUNT);
+                    values.Add(ecomInfo.TRACE_NUMBER);
+                    values.Add(ecomInfo.TRANS_TIME);
+                    values.Add(ecomInfo.TRANS_DATE);
+                    values.Add(ecomInfo.PAYMENT_DATE);
+                    values.Add(ecomInfo.DEVICE_TYPE);
+                    values.Add(ecomInfo.BANK_CODE);
+                    values.Add(ecomInfo.AUTH_NUMBER.Trim());
+                    values.Add(ecomInfo.DEVICE_CODE.Trim());
+                    values.Add(ecomInfo.CCY);
+                    values.Add(ecomInfo.TRANSACTION_CODE);
+                    values.Add(ecomInfo.AUTHORISATION_CODE);
+                    values.Add(ecomInfo.MTI);
+                    values.Add(ecomInfo.STATUS);
+                    values.Add(ecomInfo.CHECKSUM);
+                    values.Add(filename);
 
-                    OracleHelper.ExecuteStoreProcedure(App.Configs.ConnectionString, Constants.PROC_BILLINGINFO_ADD, values.ToArray());
+                    OracleHelper.ExecuteStoreProcedure(App.Configs.ConnectionString, Constants.PROC_ECOMINFO_ADD, values.ToArray());
                 }
             }
             catch (Exception ex)
