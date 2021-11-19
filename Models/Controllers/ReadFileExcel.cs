@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
 using System.Text;
 namespace Models.Controllers
 {
@@ -81,35 +80,5 @@ namespace Models.Controllers
             }
           
         }
-
-        public static void ExportExcel(DataTable data)
-        {
-            try
-            {
-                string path = @"E:\Working\VRB_SRS\D00614-01505001-01505001-202106-BT-M-01.xlsx";
-                FileInfo file = new FileInfo(path);
-                using (ExcelPackage excelPackage = new ExcelPackage(file))
-                {
-                    ExcelWorkbook excelWorkBook = excelPackage.Workbook;
-                    ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets[0];
-                    if (data.Rows.Count > 0)
-                    {
-                        for(int i=0;i<data.Rows.Count-1;i++)
-                        {
-                            worksheet.Cells[data.Rows[i][0].ToString()].Value = data.Rows[i][1].ToString();                            
-                            excelPackage.Save();
-                        }
-                    }
-                    
-                }
-
-            }
-            catch (Exception ex)
-            {
-                ErrorUtils.WriteLog(ex.Message);
-                
-            }
-
-        }        
     }
 }

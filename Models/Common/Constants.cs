@@ -44,6 +44,7 @@
         public const string PROC_ATMINFOS_ADD = "SP_ATMINFOS_ADD";
         public const string PROC_ATMINFOSJRN_ADD = "SP_ATMINFOSJRN_ADD";
         public const string PROC_ACCOUNTING_ADD = "SP_ACCOUNTING_TRANS_INS";
+        public const string PROC_VISA_DEBIT_FEE = "SP_VISA_DEBIT_FEE_INS";
         public const string PROC_BILLINGINFO_ADD = "SP_BILLINGINFO_ADD";
         public const string PROC_ECOMINFO_ADD = "SP_ECOMINFO_ADD";
 
@@ -74,6 +75,8 @@
         public const string FILE_ACK = "ACK";
         public const string FILE_OUT = "OUT";
 
+        public const string FILE_NAME_VISA_DEBIT = "VISA_DEBIT_FEE";
+
         public const int POS_BASE = 0;
         public const int POS_1 = POS_BASE + 4;
         public const int POS_2 = POS_1 + 19;
@@ -102,6 +105,7 @@
         public const string FileData_HT = "28";
         public const string FileTopupBilling = "29";
         public const string FileEcom = "33";
+        public const string FileData_VisaDebitFee = "30";
 
     }
 }
